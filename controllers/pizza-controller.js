@@ -5,6 +5,12 @@ const pizzaController = {
     // get all pizzas
     getAllPizza(req, res) {
         Pizza.find({})
+            .populate({ // populates the comments in the getAllPizza response
+                path: 'comments',
+                select: '-__v'
+            })
+            .select('-__v') // do not show the 'v' field in the response
+            .sort({ _id: -1 }) // sort the responses to show the newest ones first 
             .then(dbPizzaData => res.json(dbPizzaData))
             .catch(err => {
                 console.log(err);
@@ -16,6 +22,11 @@ const pizzaController = {
     // get one pizza
     getPizzaById({ params }, res) {
         Pizza.findOne({ _id: params.id })
+            .populate({
+                path: 'comments',
+                select: '-__v'
+            })
+            .select('-__v')
             .then(dbPizzaData => {
                 // If no pizza is found, send 404
                 if (!dbPizzaData) {
