@@ -4,7 +4,7 @@ const commentController = {
     // POST /api/comment
     // add comment to Pizza
     addComment({ params, body }, res) {
-        console.log("Updating pizza ID: " + params);
+        console.log("Adding comment to pizza ID: " + params);
         console.log(body);
         Comment.create(body)
             .then(({ _id }) => {
@@ -22,6 +22,36 @@ const commentController = {
                 }
                 res.json(dbPizzaData);
             })
+            .catch(err => res.json(err));
+    },
+
+    // PUT /api/comment
+    // add reply to comment
+    addReply({ params, body }, res) {
+        Comment.findOneAndUpdate(
+            { _id: params.commentId },
+            { $push: { replies: body } },
+            { new: true }
+        )
+            .then(dbPizzaData => {
+                if (!dbPizzaData) {
+                    res.status(404).json({ message: 'No pizza found with this id.' });
+                    return;
+                }
+                res.json(dbPizzaData);
+            })
+            .catch(err => res.json(err));
+    },
+
+    // DELETE /api/comment/:id
+    // remove reply to comment
+    removeReply({ params }, res) {
+        Comment.findOneAndUpdate(
+            { _id: params.commentId },
+            { $pull: { replies: { replyId: params.replyId } } },
+            { new: true }
+        )
+            .then(dbPizzaData => res.json(dbPizzaData))
             .catch(err => res.json(err));
     },
 

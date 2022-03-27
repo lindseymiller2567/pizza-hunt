@@ -4,7 +4,7 @@ const getPizzaList = () => {
   fetch('/api/pizzas')
     .then(response => response.json()) // transform response into JSON data that we can use
     .then(pizzaListArr => {
-      // console.log(pizzaListArr)
+      console.log(pizzaListArr)
       pizzaListArr.forEach(printPizza); // run each item in array through the printPizza function using the .forEach() method
     })
     .catch(err => {
