@@ -52,7 +52,9 @@ const pizzaController = {
     // PUT /api/pizzas/:id
     // update pizza by id
     updatePizza({ params, body }, res) {
-        Pizza.findOneAndUpdate({ _id: params.id }, body, { new: true }) // new:true must be included or else mongoose will return the original doc instead of the new doc with the udpated info
+        Pizza.findOneAndUpdate(
+            { _id: params.id }, body,
+            { new: true, runValidators: true }) // new:true must be included or else mongoose will return the original doc instead of the new doc with the udpated info
             .then(dbPizzaData => {
                 if (!dbPizzaData) {
                     res.status(404).json({ message: 'No pizza found with this id.' });
